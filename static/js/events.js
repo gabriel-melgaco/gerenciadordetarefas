@@ -51,7 +51,7 @@ document.getElementById('cadastrarTarefa').addEventListener('submit', function(e
 
     const usuario = document.getElementById('nome').value;
     const titulo = document.getElementById('titulo').value;
-    const descricao = document.querySelector('.ql-editor').innerHTML;  // Pega o conteúdo HTML do editor Quill
+    const descricao = quill.root.innerHTML;  // Pega o conteúdo HTML do editor Quill
     const prioridade = document.getElementById('prioridade').value;
 
     fetch(`/cadastrar_tarefa`, {
@@ -192,7 +192,7 @@ function abrirModalDetalhesTarefa(id) {
 document.getElementById('salvarAlteracoesTarefa').addEventListener('click', function() {
     const id = this.getAttribute('data-id');  // Pega o ID da tarefa atribuído anteriormente
     const titulo = document.getElementById('tituloTarefa').value;
-    const descricao = document.querySelector('.ql-editor').innerHTML;
+    const descricao = quill2.root.innerHTML;
     const prioridade = document.getElementById('prioridadeTarefa').value;
 
     fetch(`/salvar_alteracoes_tarefa/${id}`, {
