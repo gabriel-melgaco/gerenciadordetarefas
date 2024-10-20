@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gerenciamento Jaguar</title>
+    <link rel="icon" href="/static/img/icon.png">
+    <link href="/static/css/bootstrap.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" /> <!-- Quill Text Editor-->
+  </head>
+  <body>
+    <section class="vh-100 gradient-custom-2">
+      <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+          <div class="col-md-12 col-xl-10">
+    
+            <div class="card mask-custom">
+              <div class="card-body p-4 text-grey">
+    
+                <div class="text-center pt-3 pb-2">
+                  <img src="static/img/jaguar_ico.png"
+                    alt="Check" width="150">
+                  <h2 class="my-4">GERENCIAMENTO JAGUAR</h2>
+                  {% with messages = get_flashed_messages() %}
+                          {% if messages %}
+                            <div class="alert alert-success" role="alert">
+                              {{ messages[0] }}
+                            </div>
+                          {% endif %}
+                        {% endwith %}
+                </div>
+
+                <!-- Nav Tabs -->
+                  <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                      <a class="nav-link active" id="tarefas-tab" data-bs-toggle="tab" href="#tarefas" role="tab" aria-controls="tarefas" aria-selected="true">Tarefas</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                      <a class="nav-link" id="adicionar-tab" data-bs-toggle="tab" href="#adicionar" role="tab" aria-controls="adicionar" aria-selected="false">Adicionar</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                      <a class="nav-link" id="finalizada-tab" data-bs-toggle="tab" href="#finalizada" role="tab" aria-controls="finalizada" aria-selected="false">Finalizadas</a>
+                    </li>
+                  </ul>
+
+                  <!-- Conteúdo das Abas -->
+                  <div class="tab-content" id="myTabContent">
+                    <!-- TABELA DE APRESENTAÇÃO DE TAREFAS -->
+                    <div class="tab-pane fade show active" id="tarefas" role="tabpanel" aria-labelledby="tarefas-tab">
+                      <div class="form-group">
+                        <label for="ordenar">Ordenar por:</label>
+                        <select name="prioridade" id="ordenarPor" onchange="ordenarTabela()">
+                          <option value="data">data</option>
+                          <option value="id">id</option>
+                          <option value="prioridade">prioridade</option>
+                        </select>
+                      </div>
+                      <table id="tabelaTarefas" class="table text-black mb-0">
+                        <thead>
+                          <tr>
+                            <th scope="col">id</th>
+                            <th scope="col">Membro do Time</th>
+                            <th scope="col">Tarefa</th>
+                            <th scope="col">Prioridade</th>
+                            <th scope="col">Data</th>
+                            <th scope="col">Ações</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <!-- AS TABELAS SERÃO RENDERIZADAS AQUI COM JS-->
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <!-- Modal para exibir detalhes da tarefa -->
+                    <div class="modal fade" id="detalhesTarefaModal" tabindex="-1" aria-labelledby="detalhesTarefaModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                          <div class="modal-content">
+                              <div class="modal-header">
+                                  <h5 class="modal-title" id="detalhesTarefaModalLabel">Editar Detalhes da Tarefa</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                                  <form id="formDetalhesTarefa">
+                                      <div class="mb-3">
+                                          <label for="tituloTarefa" class="form-label">Título</label>
+                                          <input type="text" class="form-control" id="tituloTarefa" name="tituloTarefa" maxlength="20">
+                                      </div>
+                                      <div class="mb-3">
+                                          <label for="descricaoTarefa" class="form-label">Descrição</label>
+                                          <div id="editor2"></div>
+                                      </div>
+                                      <div class="mb-3">
+                                          <label for="prioridadeTarefa" class="form-label">Prioridade</label>
+                                          <select class="form-select" id="prioridadeTarefa" name="prioridadeTarefa">
+                                              <option value="1">Alta</option>
+                                              <option value="2">Média</option>
+                                              <option value="3">Baixa</option>
+                                          </select>
+                                      </div>
+                                  </form>
+                              </div>
+                              <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                                  <button type="button" class="btn btn-primary" id="salvarAlteracoesTarefa">Salvar alterações</button>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+
+                    <!-- FORMULÁRIO PARA ADIÇÃO DE TAREFAS -->
+                    <div class="tab-pane fade" id="adicionar" role="tabpanel" aria-labelledby="adicionar-tab">
+                      <form method="post" class="formLogin" id="cadastrarTarefa">
+                        <div class="form-group">
+                          <label for="nome">Usuário</label>
+                          <select class="form-control" name="nome" id="nome">
+                            <option value="MELGAÇO">MELGAÇO</option>
+                            <option value="ALEF">ALEF</option>
+                            <option value="GILSON">GILSON</option>
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <label for="titulo">Título</label>
+                          <input type="text" name="titulo" class="form-control" id="titulo" placeholder="título máx 20 caracteres" required maxlength="20">
+                        </div>
+                        <div class="form-group">
+                          <label for="prioridade">Prioridade</label>
+                          <select class="form-control" name="prioridade" id="prioridade">
+                            <option value="1">Alta Prioridade</option>
+                            <option value="2">Média Priordade</option>
+                            <option value="3">Baixa Prioridade</option>
+                          </select>
+                        </div>
+                        <div class="form-group">
+                          <label for="titulo">Descrição Tarefa</label>
+                          <div id="editor"></div>
+                        </div>
+                        <button type="submit" class=" btn_adicionar btn btn-primary">Adicionar</button>
+                      </form>
+                    </div>
+
+                   <!-- TABELA DE TAREFAS FINALIZADAS -->
+                      <div class="tab-pane fade" id="finalizada" role="tabpanel" aria-labelledby="finalizada-tab">
+                        <table id="tabelaTarefasFinalizadas" class="table text-black mb-0">
+                          <thead>
+                            <tr>
+                              <th scope="col">ID</th>
+                              <th scope="col">Membro do Time</th>
+                              <th scope="col">Tarefa</th>
+                              <th scope="col">Prioridade</th>
+                              <th scope="col">Finalizada em</th>
+                              <th scope="col">Ações</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <!-- ONDE SERÁ RENDERIZADA A TABELA -->
+                          </tbody>
+                        </table>
+                      </div>
+                  </div>
+
+    
+              </div>
+            </div>
+    
+          </div>
+        </div>
+      </div>
+    </section>
+    <script src="/static/js/bootstrap.js"></script>
+    <script src="/static/js/bootstrap.bundle.js"></script>
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/bootstrap.esm.min.js"></script>
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/9cf3f4ac1c.js" crossorigin="anonymous"></script>
+    <!-- script de Eventos -->
+     <script src="/static/js/events.js"></script>
+     <!-- Include the Quill library -->
+      <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+
+      <!-- Initialize Quill editor -->
+      <script>
+        const quill = new Quill('#editor', {
+          theme: 'snow'
+        });
+        const quill2 = new Quill('#editor2', {
+          theme: 'snow'
+        });
+      </script>
+</html>
