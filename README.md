@@ -6,7 +6,6 @@ O **Gerenciamento Jaguar** é uma aplicação web desenvolvida com Flask para ge
 
 ## Funcionalidades
 
-- **Autenticação de Usuários**: Gestão de diferentes usuários (Melgaço, Alef, Gilson).
 - **Cadastro de Tarefas**: Adicione tarefas com prioridade (alta, média ou baixa), título e descrição utilizando um editor de texto Quill.
 - **Visualização de Tarefas**: As tarefas são exibidas em uma tabela com opções de ordenação.
 - **Edição de Tarefas**: Funcionalidade para editar os detalhes das tarefas através de um modal com o Quill Editor.
