@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request, redirect, jsonify, flash
+from flask import Flask, render_template, request, redirect, jsonify, send_from_directory
 from peewee import *
 from datetime import datetime
+import os
 
 
 app = Flask(__name__)
@@ -23,6 +24,9 @@ class Tarefas(Model):
 
 db.connect()
 db.create_tables([Tarefas])
+UPLOAD_FOLDER = os.path.dirname(os.path.abspath(__file__))
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 
 @app.route("/")
 def index():
@@ -147,6 +151,10 @@ def finalizar_tarefa(id):
     tarefa.save()
 
     return jsonify({'status': 'success', 'message': 'Tarefa finalizada e movida para Tarefas Finalizadas'})
+
+@app.route('/download/<filename>')
+def download_db(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
 
 if __name__ == '__main__':
     app.run(debug=True)
