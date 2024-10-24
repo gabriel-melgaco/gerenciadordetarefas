@@ -235,11 +235,22 @@ function ordenarTabela() {
     if (criterio === 'data') {
         mostrarTarefas(); 
     } 
+    // Ordenar por nome
+    else if (criterio === 'nome') {
+        const nome = {'ALEF': 1, 'GILSON': 2, 'MELGAÇO': 3};
+        linhas.sort((a, b) => {
+            const nomeA = nome[a.cells[1].innerText.trim().toUpperCase()] || 0;  // Remover espaços e converter para maiúsculas
+            const nomeB = nome[b.cells[1].innerText.trim().toUpperCase()] || 0;  // Se não encontrar, define como 0
+            console.log(nomeA, nomeB);  // Exibe os valores no console
+            return ordemAsc ? nomeA - nomeB : nomeB - nomeA;
+        });
+    }
     // Ordenar por ID
     else if (criterio === 'id') {
         linhas.sort((a, b) => {
             const idA = parseInt(a.cells[0].innerText);
             const idB = parseInt(b.cells[0].innerText);
+            console.log(idA)
             return ordemAsc ? idA - idB : idB - idA;
         });
     } 
